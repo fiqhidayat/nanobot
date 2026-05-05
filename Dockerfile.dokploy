@@ -32,16 +32,16 @@ RUN git config --global --add url."https://github.com/".insteadOf ssh://git@gith
     npm install && npm run build
 WORKDIR /app
 
-# Create non-root user and base directories
+# Create non-root user and config directory
 RUN useradd -m -u 1000 -s /bin/bash nanobot && \
-    mkdir -p /home/nanobot/.nanobot /data/nanobot && \
-    chown -R nanobot:nanobot /home/nanobot /app /data/nanobot
+    mkdir -p /home/nanobot/.nanobot && \
+    chown -R nanobot:nanobot /home/nanobot /app
 
 COPY entrypoint.dokploy.sh /usr/local/bin/entrypoint.dokploy.sh
 RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.dokploy.sh && chmod +x /usr/local/bin/entrypoint.dokploy.sh
 
+USER nanobot
 ENV HOME=/home/nanobot
-ENV NANOBOT_CONFIG_DIR=/data/nanobot
 
 # Gateway default port
 EXPOSE 18790

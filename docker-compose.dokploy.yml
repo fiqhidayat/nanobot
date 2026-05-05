@@ -2,10 +2,6 @@ x-common-config: &common-config
   build:
     context: .
     dockerfile: Dockerfile.dokploy
-  environment:
-    - NANOBOT_CONFIG_DIR=/data/nanobot
-  volumes:
-    - nanobot_config:/data/nanobot
   cap_drop:
     - ALL
   cap_add:
@@ -52,6 +48,3 @@ services:
     command: ["status"]
     stdin_open: true
     tty: true
-
-volumes:
-  nanobot_config:
