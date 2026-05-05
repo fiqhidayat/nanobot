@@ -3,6 +3,8 @@ set -eu
 
 dir="$HOME/.nanobot"
 config_file="$dir/config.json"
+fallback_1="/config.json"
+fallback_2="$HOME/config.json"
 mkdir -p "$dir"
 
 if [ -d "$dir" ] && [ ! -w "$dir" ]; then
@@ -15,9 +17,18 @@ EOF
 fi
 
 if [ ! -f "$config_file" ]; then
+    if [ -f "$fallback_1" ]; then
+        cp "$fallback_1" "$config_file"
+    elif [ -f "$fallback_2" ]; then
+        cp "$fallback_2" "$config_file"
+    fi
+fi
+
+if [ ! -f "$config_file" ]; then
     cat >&2 <<EOF
 Error: config file not found: $config_file
 Mount config.json directly to: $config_file
+Dokploy fallback paths checked: $fallback_1, $fallback_2
 EOF
     exit 1
 fi
